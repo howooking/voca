@@ -1,3 +1,6 @@
+//cors
+const cors = require("cors");
+
 //routes
 const vocaRoutes = require("./routes/vocaRoutes");
 
@@ -15,6 +18,7 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cors({ origin: "*" }));
 
 //vocabulary routes
 app.use("/api/voca", vocaRoutes);
