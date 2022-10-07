@@ -1,18 +1,17 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import WordCard from "../components/WordCard";
-
+export type WordState = {
+  _id: string;
+  eng: string;
+  kor: string;
+  isDone: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+};
 export const Home = () => {
-  type wordType = {
-    _id: string;
-    eng: string;
-    kor: string;
-    isDone: boolean;
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
-  };
-  const [words, setWords] = useState<wordType[]>([]);
+  const [words, setWords] = useState<WordState[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {

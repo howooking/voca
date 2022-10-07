@@ -3,18 +3,9 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { WordState } from "../pages/Home";
 
-type wordType = {
-  _id: string;
-  eng: string;
-  kor: string;
-  isDone: boolean;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-};
-
-export default function WordCard(word: wordType) {
+export default function WordCard(word: WordState) {
   return (
     <Card sx={{ width: 250, margin: 2, height: 180 }}>
       <CardContent>
