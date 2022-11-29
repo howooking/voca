@@ -31,10 +31,17 @@ export default function Test() {
         alignItems: 'center',
       }}
     >
-      <Card sx={{ height: '50px', my: 1, p: 1 }}>
+      <Card
+        sx={{
+          height: '100px',
+          width: '200px',
+          my: 2,
+          p: 1,
+        }}
+      >
         <Typography
           variant="h6"
-          sx={{ textAlign: 'center', lineHeight: '50px' }}
+          sx={{ textAlign: 'center', lineHeight: '100px' }}
         >
           {randomFive &&
             randomFive[Math.floor(Math.random() * 5)].eng.toUpperCase()}
