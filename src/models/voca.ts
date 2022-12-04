@@ -1,4 +1,4 @@
-export type Voca = {
+export type VocaInfo = {
   eng: string;
   kor: string;
 };

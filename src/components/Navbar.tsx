@@ -1,7 +1,7 @@
 import { AppBar, Box, Toolbar, Typography, Button } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
-export default function Navbar() {
+export default function Navbar(): JSX.Element {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">

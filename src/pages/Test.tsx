@@ -1,22 +1,16 @@
-import { useQuery } from '@tanstack/react-query';
-import { Box, Typography, Card } from '@mui/material';
-import { Voca } from '../models/voca';
-import getVocas from '../api/firebase';
+import { Box, List, Divider } from '@mui/material';
+import { useState } from 'react';
+import { VocaInfo } from '../models/voca';
+import VocaList from '../components/VocaList';
+import useGetRandomVocas from '../hooks/useGetRandomVocas';
 import VocaCard from '../components/VocaCard';
 
-export default function Test() {
-  const { isLoading, isError, data: vocas } = useQuery(['voca'], getVocas);
-
-  const randomVocaGenerator = () => {
-    const randomVoca = [];
-    for (let i = 0; i < 5; i += 1) {
-      const chosenVoca = vocas && vocas[Math.floor(Math.random() * 1220) + 1];
-      randomVoca.push(chosenVoca);
-    }
-    return randomVoca;
+export default function Test(): JSX.Element {
+  const { isError, isLoading, randomVocas } = useGetRandomVocas(5);
+  const [isFront, setIsFront] = useState<boolean>(true);
+  const handleFlip = (): void => {
+    setIsFront((prev) => !prev);
   };
-  const randomFive = randomVocaGenerator();
-
   if (isLoading) {
     return <h1>Loading...</h1>;
   }
@@ -31,29 +25,32 @@ export default function Test() {
         alignItems: 'center',
       }}
     >
-      <Card
-        sx={{
-          height: '100px',
-          width: '200px',
-          my: 2,
-          p: 1,
-        }}
-      >
-        <Typography
-          variant="h6"
-          sx={{ textAlign: 'center', lineHeight: '100px' }}
-        >
-          {randomFive &&
-            randomFive[Math.floor(Math.random() * 5)].eng.toUpperCase()}
-        </Typography>
-      </Card>
-
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        {randomFive &&
-          randomFive.map((voca: Voca, i: number) => (
-            <VocaCard key={voca.eng} text={voca.kor} i={i} />
-          ))}
+      <Box sx={{ perspective: '300px' }}>
+        <VocaCard
+          front
+          isFront={isFront}
+          randomVocas={randomVocas}
+          handleFlip={handleFlip}
+        />
+        <VocaCard
+          front={false}
+          isFront={isFront}
+          randomVocas={randomVocas}
+          handleFlip={handleFlip}
+        />
       </Box>
+
+      <List>
+        {randomVocas &&
+          randomVocas.map((voca: VocaInfo, i: number) => (
+            <>
+              <VocaList key={voca.eng} text={voca.kor} i={i} />
+              <Divider
+                sx={{ display: i === randomVocas.length - 1 ? 'none' : 'box' }}
+              />
+            </>
+          ))}
+      </List>
     </Box>
   );
 }
