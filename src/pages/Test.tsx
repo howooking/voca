@@ -1,56 +1,41 @@
-import { Box, List, Divider } from '@mui/material';
-import { useState } from 'react';
-import { VocaInfo } from '../models/voca';
+import { CircularProgress, IconButton, List, Stack } from '@mui/material';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { Voca } from '../models/voca';
 import VocaList from '../components/VocaList';
-import useGetRandomVocas from '../hooks/useGetRandomVocas';
-import VocaCard from '../components/VocaCard';
+import useGetAllVocas from '../hooks/useGetAllVocas';
+import CardPaper from '../components/CardPaper';
 
 export default function Test(): JSX.Element {
-  const { isError, isLoading, randomVocas } = useGetRandomVocas(5);
-  const [isFront, setIsFront] = useState<boolean>(true);
-  const handleFlip = (): void => {
-    setIsFront((prev) => !prev);
-  };
-  if (isLoading) {
-    return <h1>Loading...</h1>;
+  const { isLoading, vocas } = useGetAllVocas();
+  function getMultipleRandom(num: number): Voca[] | undefined {
+    const shuffled = vocas && [...vocas].sort(() => 0.5 - Math.random());
+    return shuffled?.slice(0, num);
   }
-  if (isError) {
-    return <h1>Error</h1>;
-  }
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}
-    >
-      <Box sx={{ perspective: '300px' }}>
-        <VocaCard
-          front
-          isFront={isFront}
-          randomVocas={randomVocas}
-          handleFlip={handleFlip}
-        />
-        <VocaCard
-          front={false}
-          isFront={isFront}
-          randomVocas={randomVocas}
-          handleFlip={handleFlip}
-        />
-      </Box>
+  const randomVocas = getMultipleRandom(5);
+  const answer = randomVocas && randomVocas[Math.floor(Math.random() * 4) + 1];
+  console.log({ rand5: randomVocas, answer });
 
-      <List>
-        {randomVocas &&
-          randomVocas.map((voca: VocaInfo, i: number) => (
-            <>
-              <VocaList key={voca.eng} text={voca.kor} i={i} />
-              <Divider
-                sx={{ display: i === randomVocas.length - 1 ? 'none' : 'box' }}
-              />
-            </>
-          ))}
-      </List>
-    </Box>
+  return (
+    <>
+      {isLoading && <CircularProgress />}
+      <Stack alignItems="center">
+        <CardPaper answer={answer} />
+        <Stack direction="row" alignItems="center">
+          <IconButton sx={{ m: 2 }} size="large">
+            <ArrowBackIosIcon sx={{ fontSize: 30 }} />
+          </IconButton>
+
+          <List>
+            {randomVocas?.map((voca: Voca, i: number) => (
+              <VocaList key={voca.id} voca={voca} i={i} answer={answer} />
+            ))}
+          </List>
+          <IconButton sx={{ m: 2 }} size="large">
+            <ArrowForwardIosIcon sx={{ fontSize: 30 }} />
+          </IconButton>
+        </Stack>
+      </Stack>
+    </>
   );
 }

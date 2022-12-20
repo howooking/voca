@@ -1,9 +1,9 @@
 import { Typography, Card, Button } from '@mui/material';
-import { VocaInfo } from '../models/voca';
+import { Voca } from '../models/voca';
 
 type VocaCardProps = {
   isFront: boolean;
-  randomVocas: VocaInfo[];
+  randomVocas: Voca[];
   front: boolean;
   handleFlip: () => void;
 };
@@ -39,10 +39,8 @@ export default function VocaCard({
         sx={{ textAlign: 'center' }}
       >
         {front
-          ? randomVocas &&
-            randomVocas[Math.floor(Math.random() * 5)].eng.toUpperCase()
-          : randomVocas &&
-            randomVocas[Math.floor(Math.random() * 5)].kor.toUpperCase()}
+          ? randomVocas[Math.floor(Math.random() * 5)].eng.toUpperCase()
+          : randomVocas[Math.floor(Math.random() * 5)].kor.toUpperCase()}
       </Typography>
       <Button
         variant="outlined"

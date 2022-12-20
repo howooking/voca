@@ -12,7 +12,7 @@
 }
 
 #root {
-  background-color: rgb(214, 214, 214);
+  background-color: rgb(228, 228, 228);
   border-radius: 0.6rem;
   overflow: hidden;
   width: 100%;
@@ -23,13 +23,7 @@
   -moz-box-shadow: 10px 12px 23px 4px rgba(0, 0, 0, 0.51);
 }
 body {
-  background: rgb(131, 58, 180);
-  background: linear-gradient(
-    90deg,
-    rgba(131, 58, 180, 1) 0%,
-    rgba(253, 29, 29, 1) 50%,
-    rgba(252, 176, 69, 1) 100%
-  );
+  background: rgb(231, 194, 255);
   margin: 0;
   width: 100vw;
   height: 100vh;
@@ -40,4 +34,7 @@ body {
 }
 a {
   text-decoration: none;
+  color: #fff;
+  text-decoration: none;
+  outline: none;
 }
