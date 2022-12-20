@@ -1,3 +1,3 @@
-export default function Wrong() {
+export default function Wrong(): JSX.Element {
   return <div>Wrong</div>;
 }
