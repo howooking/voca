@@ -18,6 +18,7 @@ export default function Navbar(): JSX.Element {
   useEffect(() => {
     onUserChange(setUser);
   }, []);
+
   return (
     <AppBar position="static" elevation={2} color="secondary">
       <Toolbar sx={{ display: 'flex', alignItems: 'center' }}>

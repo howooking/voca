@@ -1,10 +1,22 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  UseMutateFunction,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { useAuthContext } from '../context/AuthContext';
 import { WrongVoca } from '../models/voca';
 import queryKeys from '../utils/queryKeys';
 import { getWrongs, removeWrong, updateWrong } from '../api/firebase';
 
-export default function useWrongQuery() {
+type UseWrongQueryReturnType = {
+  wrongs: WrongVoca[] | undefined;
+  isLoading: boolean;
+  mutateUpdateWrong: UseMutateFunction<void, unknown, WrongVoca, unknown>;
+  mutateRemoveWrong: UseMutateFunction<void, unknown, WrongVoca, unknown>;
+};
+
+export default function useWrongQuery(): UseWrongQueryReturnType {
   const { uid } = useAuthContext();
   const client = useQueryClient();
   const { isLoading, data: wrongs } = useQuery(
@@ -16,7 +28,7 @@ export default function useWrongQuery() {
       },
     }
   );
-  console.log(wrongs);
+
   const { mutate: mutateUpdateWrong } = useMutation(
     (voca: WrongVoca) => updateWrong(uid, voca),
     {

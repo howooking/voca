@@ -24,6 +24,7 @@ const app = initializeApp(firebaseConfig);
 
 // auth
 const provider = new GoogleAuthProvider();
+
 export const login = (): void => {
   const auth = getAuth();
   signInWithPopup(auth, provider).catch((error) => {
@@ -102,7 +103,10 @@ export const addWrong = (userId: string, answer: Voca | undefined): void => {
   });
 };
 
-export const updateWrong = async (userId: string, voca: WrongVoca) => {
+export const updateWrong = async (
+  userId: string,
+  voca: WrongVoca
+): Promise<void> => {
   const database = getDatabase(app);
   set(ref(database, `wrongs/${userId}/${voca?.id}`), voca);
 };
