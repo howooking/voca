@@ -25,7 +25,7 @@ export default function Navbar(): JSX.Element {
           <SpellcheckIcon />
         </Link>
         <Typography flexGrow={1} variant="h6" fontWeight="bold">
-          <Link to="/">토익영단어암기</Link>
+          <Link to="/">영단어암기</Link>
         </Typography>
         <Button
           variant="contained"
@@ -44,7 +44,7 @@ export default function Navbar(): JSX.Element {
         >
           <Link to="/wrong">틀린단어</Link>
         </Button>
-        {user && <Avatar src={user.photoURL} alt="avatar" />}
+        {user && <Avatar src={user.photoURL} alt="avatar" sx={{ m: 2 }} />}
         {user ? (
           <IconButton onClick={logout}>
             <LogoutIcon sx={{ color: 'white' }} />

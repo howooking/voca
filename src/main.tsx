@@ -7,6 +7,7 @@ import ErrorPage from './pages/ErrorPage';
 import Home from './pages/Home';
 import Test from './pages/Test';
 import Wrong from './pages/Wrong';
+import WrongTable from './components/WrongTable';
 
 const router = createBrowserRouter([
   {

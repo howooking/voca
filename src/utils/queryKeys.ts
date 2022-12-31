@@ -1,7 +1,9 @@
 const enum Keys {
-  voca = 'voca',
+  vocas = 'vocas',
+  wrongs = 'wrongs',
 }
 const queryKeys = {
-  getVoca: () => [Keys.voca] as const,
+  getVoca: () => [Keys.vocas] as const,
+  getWrong: () => [Keys.wrongs] as const,
 };
 export default queryKeys;
