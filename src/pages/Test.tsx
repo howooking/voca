@@ -1,56 +1,103 @@
-import { Box, List, Divider } from '@mui/material';
-import { useState } from 'react';
-import { VocaInfo } from '../models/voca';
-import VocaList from '../components/VocaList';
-import useGetRandomVocas from '../hooks/useGetRandomVocas';
-import VocaCard from '../components/VocaCard';
+import { Alert, CircularProgress, List, Snackbar, Stack } from '@mui/material';
+import { useMemo, useState } from 'react';
+import { Voca } from '../models/voca';
+import SingleVocaChoice from '../components/SingleVocaChoice';
+import useGetVocas from '../hooks/useGetVocas';
+import CardPaper from '../components/CardPaper';
+import { useAuthContext } from '../context/defaultAuthContext';
+import {
+  addWrong,
+  shownCountPlusOne,
+  wrongCountPlusOne,
+} from '../api/firebase';
 
 export default function Test(): JSX.Element {
-  const { isError, isLoading, randomVocas } = useGetRandomVocas(5);
-  const [isFront, setIsFront] = useState<boolean>(true);
-  const handleFlip = (): void => {
-    setIsFront((prev) => !prev);
+  const [page, setPage] = useState<number>(1);
+  const handleNextPage = (): void => {
+    setPage((prev) => prev + 1);
   };
-  if (isLoading) {
-    return <h1>Loading...</h1>;
-  }
-  if (isError) {
-    return <h1>Error</h1>;
-  }
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}
-    >
-      <Box sx={{ perspective: '300px' }}>
-        <VocaCard
-          front
-          isFront={isFront}
-          randomVocas={randomVocas}
-          handleFlip={handleFlip}
-        />
-        <VocaCard
-          front={false}
-          isFront={isFront}
-          randomVocas={randomVocas}
-          handleFlip={handleFlip}
-        />
-      </Box>
 
-      <List>
-        {randomVocas &&
-          randomVocas.map((voca: VocaInfo, i: number) => (
-            <>
-              <VocaList key={voca.eng} text={voca.kor} i={i} />
-              <Divider
-                sx={{ display: i === randomVocas.length - 1 ? 'none' : 'box' }}
+  const { isLoading, vocas } = useGetVocas();
+
+  const shuffled = useMemo(
+    () => vocas && [...vocas].sort(() => 0.5 - Math.random()),
+    [vocas]
+  );
+  const { slicedVocas, answer } = useMemo(() => {
+    if (!shuffled) {
+      return { slicedVocas: undefined, answer: undefined };
+    }
+    const pagingVocas = shuffled.slice(5 * (page - 1), 5 * page);
+    const randomizedAnswer = pagingVocas[Math.floor(Math.random() * 5)];
+    return { slicedVocas: pagingVocas, answer: randomizedAnswer };
+  }, [page, shuffled]);
+
+  // 정답오답관련
+  const { user } = useAuthContext();
+  const [open, setOpen] = useState(false);
+  const [isRight, setIsRight] = useState(false);
+  const [isEnd, setIsEnd] = useState<boolean>(false);
+  const handleVocaItemClick = (answerVoca: Voca, voca: Voca): void => {
+    if (answerVoca.id === voca.id) {
+      setIsRight(true);
+      setOpen(true);
+      setIsEnd(true);
+      shownCountPlusOne(answerVoca);
+      setTimeout(() => {
+        setOpen(false);
+        handleNextPage();
+        setIsEnd(false);
+      }, 2500);
+    } else {
+      setIsRight(false);
+      setOpen(true);
+      setIsEnd(true);
+      addWrong(user?.uid, answerVoca);
+      wrongCountPlusOne(answerVoca);
+      setTimeout(() => {
+        setOpen(false);
+        handleNextPage();
+        setIsEnd(false);
+      }, 2500);
+    }
+  };
+  return (
+    <>
+      {isLoading && <CircularProgress />}
+      <Stack alignItems="center">
+        <CardPaper answer={answer} />
+        <Stack direction="row" alignItems="center">
+          <List>
+            {slicedVocas?.map((voca: Voca, i: number) => (
+              <SingleVocaChoice
+                key={voca.id}
+                voca={voca}
+                i={i}
+                onClick={() => handleVocaItemClick(answer, voca)}
+                isEnd={isEnd}
               />
-            </>
-          ))}
-      </List>
-    </Box>
+            ))}
+          </List>
+        </Stack>
+        <Snackbar
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          open={open}
+          autoHideDuration={2400}
+          onClose={() => setOpen(false)}
+        >
+          <Alert
+            severity={isRight ? 'success' : 'error'}
+            onClose={() => setOpen(false)}
+            elevation={6}
+            sx={{ fontSize: 20, display: 'flex', alignItems: 'center' }}
+          >
+            {isRight
+              ? `'${answer?.eng}'! 정답입니다😃😃`
+              : `정답은 '${answer?.kor}'입니다😥😥\n
+              틀린단어에 추가됩니다.`}
+          </Alert>
+        </Snackbar>
+      </Stack>
+    </>
   );
 }

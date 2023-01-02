@@ -1,31 +1,59 @@
-import { AppBar, Box, Toolbar, Typography, Button } from '@mui/material';
-import { NavLink } from 'react-router-dom';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Avatar,
+  IconButton,
+} from '@mui/material';
+import SpellcheckIcon from '@mui/icons-material/Spellcheck';
+import LoginIcon from '@mui/icons-material/Login';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { Link } from 'react-router-dom';
+import { useAuthContext } from '../context/defaultAuthContext';
 
 export default function Navbar(): JSX.Element {
+  const { user, login, logout } = useAuthContext();
+
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            토익영단어암기
-          </Typography>
-          <NavLink to="/test">
-            <Button variant="contained" disableElevation>
-              테스트
-            </Button>
-          </NavLink>
-          <NavLink to="/wrong">
-            <Button variant="contained" disableElevation>
-              틀린단어
-            </Button>
-          </NavLink>
-          <NavLink to="/">
-            <Button variant="contained" disableElevation>
-              로그인
-            </Button>
-          </NavLink>
-        </Toolbar>
-      </AppBar>
-    </Box>
+    <AppBar position="static" elevation={2} color="secondary">
+      <Toolbar sx={{ display: 'flex', alignItems: 'center' }}>
+        <Link to="/">
+          <SpellcheckIcon />
+        </Link>
+        <Typography flexGrow={1} variant="h6" fontWeight="bold">
+          <Link to="/">영단어암기</Link>
+        </Typography>
+        <Button
+          variant="contained"
+          disableElevation
+          sx={{ fontSize: 17, fontWeight: 'bold' }}
+          color="secondary"
+        >
+          <Link to="/test">테스트</Link>
+        </Button>
+
+        <Button
+          variant="contained"
+          disableElevation
+          sx={{ fontSize: 17, fontWeight: 'bold' }}
+          color="secondary"
+        >
+          <Link to="/wrong">틀린단어</Link>
+        </Button>
+        {user?.photoURL && (
+          <Avatar src={user.photoURL} alt="avatar" sx={{ m: 2 }} />
+        )}
+        {user ? (
+          <IconButton onClick={logout}>
+            <LogoutIcon sx={{ color: 'white' }} />
+          </IconButton>
+        ) : (
+          <IconButton onClick={login}>
+            <LoginIcon sx={{ color: 'white' }} />
+          </IconButton>
+        )}
+      </Toolbar>
+    </AppBar>
   );
 }
