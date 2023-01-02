@@ -2,7 +2,7 @@
 import { Alert, ListItemButton, ListItemText, Snackbar } from '@mui/material';
 import { useState } from 'react';
 import { Voca } from '../models/voca';
-import { useAuthContext } from '../context/AuthContext';
+import { useAuthContext } from '../context/defaultAuthContext';
 import {
   addWrong,
   shownCountPlusOne,

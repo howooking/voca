@@ -7,6 +7,7 @@ import {
   GoogleAuthProvider,
   signOut,
   onAuthStateChanged,
+  User,
 } from 'firebase/auth';
 import { Voca, WrongVoca } from '../models/voca';
 
@@ -24,6 +25,7 @@ const app = initializeApp(firebaseConfig);
 
 // auth
 const provider = new GoogleAuthProvider();
+export type CustomUser = Pick<User, 'photoURL' | 'uid'>;
 
 export const login = (): void => {
   const auth = getAuth();
@@ -31,16 +33,29 @@ export const login = (): void => {
     console.log(error);
   });
 };
+
 export const logout = (): void => {
   const auth = getAuth();
   signOut(auth).catch((error) => {
     console.log(error);
   });
 };
-export const onUserChange = (callback: (user: any) => void): void => {
+
+export const onUserChange = (
+  callback: (user: CustomUser | null) => void
+): void => {
   const auth = getAuth();
   onAuthStateChanged(auth, (user) => {
-    callback(user);
+    if (!user) {
+      callback(null);
+      return;
+    }
+    const { uid, photoURL } = user;
+    const customUser = {
+      uid,
+      photoURL,
+    };
+    callback(customUser);
   });
 };
 
@@ -77,8 +92,9 @@ export const wrongCountPlusOne = (answer: Voca | undefined): void => {
 };
 
 // Wrong Vocas
-
-export const getWrongs = async (userId: string): Promise<WrongVoca[]> => {
+export const getWrongs = async (
+  userId: string | undefined
+): Promise<WrongVoca[]> => {
   const database = getDatabase(app);
   return get(ref(database, `wrongs/${userId}`))
     .then((snapshot) => {
@@ -104,7 +120,7 @@ export const addWrong = (userId: string, answer: Voca | undefined): void => {
 };
 
 export const updateWrong = async (
-  userId: string,
+  userId: string | undefined,
   voca: WrongVoca
 ): Promise<void> => {
   const database = getDatabase(app);
@@ -112,7 +128,7 @@ export const updateWrong = async (
 };
 
 export const removeWrong = async (
-  userId: string,
+  userId: string | undefined,
   voca: WrongVoca
 ): Promise<void> => {
   const database = getDatabase(app);

@@ -1,27 +1,15 @@
-import {
-  UseMutateFunction,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
-import { useAuthContext } from '../context/AuthContext';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useAuthContext } from '../context/defaultAuthContext';
 import { WrongVoca } from '../models/voca';
 import queryKeys from '../utils/queryKeys';
 import { getWrongs, removeWrong, updateWrong } from '../api/firebase';
 
-type UseWrongQueryReturnType = {
-  wrongs: WrongVoca[] | undefined;
-  isLoading: boolean;
-  mutateUpdateWrong: UseMutateFunction<void, unknown, WrongVoca, unknown>;
-  mutateRemoveWrong: UseMutateFunction<void, unknown, WrongVoca, unknown>;
-};
-
-export default function useWrongQuery(): UseWrongQueryReturnType {
-  const { uid } = useAuthContext();
+export default function useWrongQuery(): typeof result {
+  const { user } = useAuthContext();
   const client = useQueryClient();
   const { isLoading, data: wrongs } = useQuery(
-    [queryKeys.getWrong(), uid],
-    () => getWrongs(uid),
+    [queryKeys.getWrong(), user?.uid],
+    () => getWrongs(user?.uid),
     {
       select: (data) => {
         return Object.values(data);
@@ -30,16 +18,19 @@ export default function useWrongQuery(): UseWrongQueryReturnType {
   );
 
   const { mutate: mutateUpdateWrong } = useMutation(
-    (voca: WrongVoca) => updateWrong(uid, voca),
+    (voca: WrongVoca) => updateWrong(user?.uid, voca),
     {
-      onSuccess: () => client.invalidateQueries([queryKeys.getWrong(), uid]),
+      onSettled: () =>
+        client.invalidateQueries([queryKeys.getWrong(), user?.uid]),
     }
   );
   const { mutate: mutateRemoveWrong } = useMutation(
-    (voca: WrongVoca) => removeWrong(uid, voca),
+    (voca: WrongVoca) => removeWrong(user?.uid, voca),
     {
-      onSuccess: () => client.invalidateQueries([queryKeys.getWrong(), uid]),
+      onSettled: () =>
+        client.invalidateQueries([queryKeys.getWrong(), user?.uid]),
     }
   );
-  return { wrongs, isLoading, mutateUpdateWrong, mutateRemoveWrong };
+  const result = { wrongs, isLoading, mutateUpdateWrong, mutateRemoveWrong };
+  return result;
 }

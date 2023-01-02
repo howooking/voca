@@ -4,7 +4,7 @@ export default function ErrorPage(): JSX.Element {
   return (
     <>
       <Navbar />
-      <p>Error</p>
+      <h1>Error</h1>
     </>
   );
 }

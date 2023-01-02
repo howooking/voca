@@ -9,15 +9,11 @@ import {
 import SpellcheckIcon from '@mui/icons-material/Spellcheck';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { login, logout, onUserChange } from '../api/firebase';
+import { useAuthContext } from '../context/defaultAuthContext';
 
 export default function Navbar(): JSX.Element {
-  const [user, setUser] = useState<any>(null);
-  useEffect(() => {
-    onUserChange(setUser);
-  }, []);
+  const { user, login, logout } = useAuthContext();
 
   return (
     <AppBar position="static" elevation={2} color="secondary">
@@ -45,7 +41,9 @@ export default function Navbar(): JSX.Element {
         >
           <Link to="/wrong">틀린단어</Link>
         </Button>
-        {user && <Avatar src={user.photoURL} alt="avatar" sx={{ m: 2 }} />}
+        {user?.photoURL && (
+          <Avatar src={user.photoURL} alt="avatar" sx={{ m: 2 }} />
+        )}
         {user ? (
           <IconButton onClick={logout}>
             <LogoutIcon sx={{ color: 'white' }} />
