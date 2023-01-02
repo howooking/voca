@@ -9,7 +9,9 @@ type UseGetVocasReturn = {
 };
 
 export default function useGetVocas(): UseGetVocasReturn {
-  const { isLoading, data: vocas } = useQuery(queryKeys.getVoca(), getVocas);
+  const { isLoading, data: vocas } = useQuery(queryKeys.getVoca(), getVocas, {
+    refetchOnWindowFocus: false,
+  });
 
   return { vocas, isLoading };
 }

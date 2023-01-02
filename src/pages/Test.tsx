@@ -1,12 +1,17 @@
-import { CircularProgress, List, Stack } from '@mui/material';
+import { Alert, CircularProgress, List, Snackbar, Stack } from '@mui/material';
 import { useMemo, useState } from 'react';
 import { Voca } from '../models/voca';
-import VocaList from '../components/VocaList';
+import SingleVocaChoice from '../components/SingleVocaChoice';
 import useGetVocas from '../hooks/useGetVocas';
 import CardPaper from '../components/CardPaper';
+import { useAuthContext } from '../context/defaultAuthContext';
+import {
+  addWrong,
+  shownCountPlusOne,
+  wrongCountPlusOne,
+} from '../api/firebase';
 
 export default function Test(): JSX.Element {
-  const [isEnd, setIsEnd] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const handleNextPage = (): void => {
     setPage((prev) => prev + 1);
@@ -27,6 +32,35 @@ export default function Test(): JSX.Element {
     return { slicedVocas: pagingVocas, answer: randomizedAnswer };
   }, [page, shuffled]);
 
+  // 정답오답관련
+  const { user } = useAuthContext();
+  const [open, setOpen] = useState(false);
+  const [isRight, setIsRight] = useState(false);
+  const [isEnd, setIsEnd] = useState<boolean>(false);
+  const handleVocaItemClick = (answerVoca: Voca, voca: Voca): void => {
+    if (answerVoca.id === voca.id) {
+      setIsRight(true);
+      setOpen(true);
+      setIsEnd(true);
+      shownCountPlusOne(answerVoca);
+      setTimeout(() => {
+        setOpen(false);
+        handleNextPage();
+        setIsEnd(false);
+      }, 2500);
+    } else {
+      setIsRight(false);
+      setOpen(true);
+      setIsEnd(true);
+      addWrong(user?.uid, answerVoca);
+      wrongCountPlusOne(answerVoca);
+      setTimeout(() => {
+        setOpen(false);
+        handleNextPage();
+        setIsEnd(false);
+      }, 2500);
+    }
+  };
   return (
     <>
       {isLoading && <CircularProgress />}
@@ -35,18 +69,34 @@ export default function Test(): JSX.Element {
         <Stack direction="row" alignItems="center">
           <List>
             {slicedVocas?.map((voca: Voca, i: number) => (
-              <VocaList
+              <SingleVocaChoice
                 key={voca.id}
                 voca={voca}
                 i={i}
-                answer={answer}
-                handleNextPage={handleNextPage}
+                onClick={() => handleVocaItemClick(answer, voca)}
                 isEnd={isEnd}
-                setIsEnd={setIsEnd}
               />
             ))}
           </List>
         </Stack>
+        <Snackbar
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          open={open}
+          autoHideDuration={2400}
+          onClose={() => setOpen(false)}
+        >
+          <Alert
+            severity={isRight ? 'success' : 'error'}
+            onClose={() => setOpen(false)}
+            elevation={6}
+            sx={{ fontSize: 20, display: 'flex', alignItems: 'center' }}
+          >
+            {isRight
+              ? `'${answer?.eng}'! 정답입니다😃😃`
+              : `정답은 '${answer?.kor}'입니다😥😥\n
+              틀린단어에 추가됩니다.`}
+          </Alert>
+        </Snackbar>
       </Stack>
     </>
   );

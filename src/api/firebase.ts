@@ -74,11 +74,11 @@ export const getVocas = async (): Promise<Voca[]> => {
     });
 };
 
-export const shownCountPlusOne = (answer: Voca | undefined): void => {
+export const shownCountPlusOne = (answer: Voca): void => {
   const database = getDatabase(app);
   set(ref(database, `vocas/${answer?.id}`), {
     ...answer,
-    shownCount: answer && answer.shownCount + 1,
+    shownCount: answer.shownCount + 1,
   });
 };
 
@@ -108,7 +108,10 @@ export const getWrongs = async (
     });
 };
 
-export const addWrong = (userId: string, answer: Voca | undefined): void => {
+export const addWrong = (
+  userId: string | undefined,
+  answer: Voca | undefined
+): void => {
   const database = getDatabase(app);
   set(ref(database, `wrongs/${userId}/${answer?.id}`), {
     id: answer?.id,

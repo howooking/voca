@@ -54,6 +54,7 @@ export default function WrongTableRow({
   };
 
   const foundVoca = vocas?.find((singleVoca) => singleVoca.id === voca.id);
+
   const wrongAnswerRate =
     foundVoca &&
     `(${foundVoca.wrongCount}/${foundVoca.shownCount}) ${Math.round(
