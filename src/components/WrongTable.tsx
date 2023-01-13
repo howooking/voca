@@ -8,6 +8,7 @@ import {
   CircularProgress,
   styled,
   Checkbox,
+  Typography,
 } from '@mui/material';
 import { tableCellClasses } from '@mui/material/TableCell';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
@@ -42,21 +43,37 @@ export default function WrongTable(): JSX.Element {
       <TableContainer
         sx={{ width: '100%', height: '100%', margin: 'auto', bgcolor: 'white' }}
       >
-        <Table sx={{ width: '100%' }} stickyHeader size="small">
+        <Table stickyHeader size="small">
           <TableHead>
             <TableRow>
-              <StyledTableCell align="center">틀린 단어</StyledTableCell>
-              <StyledTableCell align="center">뜻</StyledTableCell>
-              <StyledTableCell align="center">오답률</StyledTableCell>
+              <StyledTableCell align="center">
+                <Typography fontSize={{ xs: 10, md: 20 }}>틀린 단어</Typography>
+              </StyledTableCell>
+              <StyledTableCell align="center">
+                <Typography fontSize={{ xs: 10, md: 20 }}>뜻</Typography>
+              </StyledTableCell>
+              <StyledTableCell align="center">
+                <Typography fontSize={{ xs: 10, md: 20 }}>오답</Typography>
+              </StyledTableCell>
               <StyledTableCell align="center">
                 <Checkbox
-                  icon={<StarBorderIcon sx={{ color: 'orange' }} />}
-                  checkedIcon={<StarIcon sx={{ color: 'orange' }} />}
+                  icon={
+                    <StarBorderIcon
+                      sx={{ color: 'orange', fontSize: { xs: 15, md: 30 } }}
+                    />
+                  }
+                  checkedIcon={
+                    <StarIcon
+                      sx={{ color: 'orange', fontSize: { xs: 15, md: 30 } }}
+                    />
+                  }
                   checked={isImportantChecked}
                   onChange={handleImportantFilter}
                 />
               </StyledTableCell>
-              <StyledTableCell align="center">삭제</StyledTableCell>
+              <StyledTableCell align="center">
+                <Typography fontSize={{ xs: 10, md: 20 }}>삭제</Typography>
+              </StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>

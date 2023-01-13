@@ -13,15 +13,15 @@
 
 #root {
   background-color: rgb(228, 228, 228);
-  border-radius: 0.6rem;
   overflow: hidden;
   width: 100%;
   max-width: 900px;
-  height: 700px;
+  height: 100vh;
   box-shadow: 10px 12px 23px 4px rgba(0, 0, 0, 0.51);
   -webkit-box-shadow: 10px 12px 23px 4px rgba(0, 0, 0, 0.51);
   -moz-box-shadow: 10px 12px 23px 4px rgba(0, 0, 0, 0.51);
 }
+
 body {
   background: rgb(231, 194, 255);
   margin: 0;

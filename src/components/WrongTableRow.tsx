@@ -11,6 +11,7 @@ import { tableCellClasses } from '@mui/material/TableCell';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Typography from '@mui/material/Typography';
 import { WrongVoca } from '../models/voca';
 import useGetVocas from '../hooks/useGetVocas';
 import useWrongQuery from '../hooks/useGetWrongVocas';
@@ -75,21 +76,31 @@ export default function WrongTableRow({
       }}
     >
       <StyledTableCell align="center" component="th" scope="row">
-        {voca.eng}
+        <Typography fontSize={{ xs: 10, md: 20 }}>{voca.eng}</Typography>
       </StyledTableCell>
-      <StyledTableCell align="center">{voca.kor}</StyledTableCell>
-      <StyledTableCell align="center">{wrongAnswerRate}</StyledTableCell>
+      <StyledTableCell align="center">
+        <Typography fontSize={{ xs: 10, md: 20 }}>{voca.kor}</Typography>
+      </StyledTableCell>
+      <StyledTableCell align="center">
+        <Typography fontSize={{ xs: 10, md: 20 }}>{wrongAnswerRate}</Typography>
+      </StyledTableCell>
       <StyledTableCell align="center">
         <Checkbox
-          icon={<StarBorderIcon sx={{ color: 'orange' }} />}
-          checkedIcon={<StarIcon sx={{ color: 'orange' }} />}
+          icon={
+            <StarBorderIcon
+              sx={{ color: 'orange', fontSize: { xs: 15, md: 30 } }}
+            />
+          }
+          checkedIcon={
+            <StarIcon sx={{ color: 'orange', fontSize: { xs: 15, md: 30 } }} />
+          }
           checked={voca.isImportant}
           onChange={handleImportantUpdate}
         />
       </StyledTableCell>
       <StyledTableCell align="center">
         <IconButton onClick={handleRemoveWrong}>
-          <DeleteIcon />
+          <DeleteIcon sx={{ fontSize: { xs: 15, md: 30 } }} />
         </IconButton>
       </StyledTableCell>
     </StyledTableRow>
