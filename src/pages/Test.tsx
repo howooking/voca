@@ -1,4 +1,12 @@
-import { Alert, CircularProgress, List, Snackbar, Stack } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  List,
+  Snackbar,
+  Stack,
+} from '@mui/material';
 import { useMemo, useState } from 'react';
 import { Voca } from '../models/voca';
 import SingleVocaChoice from '../components/SingleVocaChoice';
@@ -33,7 +41,7 @@ export default function Test(): JSX.Element {
   }, [page, shuffled]);
 
   // 정답오답관련
-  const { user } = useAuthContext();
+  const { user, login } = useAuthContext();
   const [open, setOpen] = useState(false);
   const [isRight, setIsRight] = useState(false);
   const [isEnd, setIsEnd] = useState<boolean>(false);
@@ -62,42 +70,60 @@ export default function Test(): JSX.Element {
     }
   };
   return (
-    <>
-      {isLoading && <CircularProgress />}
-      <Stack alignItems="center">
-        <CardPaper answer={answer} />
-        <Stack direction="row" alignItems="center">
-          <List>
-            {slicedVocas?.map((voca: Voca, i: number) => (
-              <SingleVocaChoice
-                key={voca.id}
-                voca={voca}
-                i={i}
-                onClick={() => handleVocaItemClick(answer, voca)}
-                isEnd={isEnd}
-              />
-            ))}
-          </List>
-        </Stack>
-        <Snackbar
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          open={open}
-          autoHideDuration={2400}
-          onClose={() => setOpen(false)}
+    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      {!user ? (
+        <Button
+          variant="contained"
+          color="warning"
+          sx={{
+            my: 20,
+            fontSize: 20,
+            fontWeight: 'bold',
+            height: '100px',
+          }}
+          onClick={login}
         >
-          <Alert
-            severity={isRight ? 'success' : 'error'}
-            onClose={() => setOpen(false)}
-            elevation={6}
-            sx={{ fontSize: 20, display: 'flex', alignItems: 'center' }}
-          >
-            {isRight
-              ? `'${answer?.eng}'! 정답입니다😃😃`
-              : `정답은 '${answer?.kor}'입니다😥😥\n
+          로그인 하러가기!
+        </Button>
+      ) : (
+        <>
+          {isLoading && <CircularProgress />}
+          <Stack alignItems="center">
+            <CardPaper answer={answer} />
+            <Stack direction="row" alignItems="center">
+              <List sx={{ m: 1 }}>
+                {slicedVocas?.map((voca: Voca, i: number) => (
+                  <SingleVocaChoice
+                    key={voca.id}
+                    voca={voca}
+                    i={i}
+                    onClick={() => handleVocaItemClick(answer, voca)}
+                    isEnd={isEnd}
+                  />
+                ))}
+              </List>
+            </Stack>
+            <Snackbar
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+              open={open}
+              autoHideDuration={2400}
+              onClose={() => setOpen(false)}
+            >
+              <Alert
+                severity={isRight ? 'success' : 'error'}
+                onClose={() => setOpen(false)}
+                elevation={6}
+                sx={{ fontSize: 20, display: 'flex', alignItems: 'center' }}
+              >
+                {isRight
+                  ? `'${answer?.eng}'! 정답입니다😃😃`
+                  : `정답은 '${answer?.kor}'입니다😥😥\n
               틀린단어에 추가됩니다.`}
-          </Alert>
-        </Snackbar>
-      </Stack>
-    </>
+              </Alert>
+            </Snackbar>
+          </Stack>
+        </>
+      )}
+    </Box>
   );
 }

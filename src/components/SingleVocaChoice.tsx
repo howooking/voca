@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-shadow */
-import { ListItemButton, ListItemText } from '@mui/material';
+import { ListItemButton, ListItemText, Typography } from '@mui/material';
 import { Voca } from '../models/voca';
 
 type VocaCardProps = {
@@ -17,11 +17,15 @@ export default function SingleVocaChoice({
 }: VocaCardProps): JSX.Element {
   return (
     <ListItemButton
-      sx={{ bgcolor: 'background.paper', width: '600px' }}
+      sx={{ bgcolor: 'background.paper', minWidth: 350, m: 1 }}
       disabled={isEnd}
       onClick={onClick}
     >
-      <ListItemText primary={`${i + 1}. ${voca.kor}`} sx={{ color: 'black' }} />
+      <ListItemText>
+        <Typography sx={{ fontSize: { xs: 15, md: 20 } }}>{`${i + 1}. ${
+          voca.kor
+        }`}</Typography>
+      </ListItemText>
     </ListItemButton>
   );
 }
