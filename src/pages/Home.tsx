@@ -2,6 +2,9 @@ export default function Home(): JSX.Element {
   return (
     <ol>
       <li>
+        크롬브라우져 권장
+      </li>
+      <li>
         Test컴포넌트가 처음 랜더링되면 db에서 1219개 토익단어가 랜덤순서로
         섞이며 memoization
       </li>
